@@ -1,0 +1,8 @@
+[core]
+	editor = nvim
+[pull]
+	rebase = false
+[alias]
+	graph = log --all --graph --decorate --oneline
+[include]
+    path = ~/.gitconfig_local
