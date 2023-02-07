@@ -86,6 +86,19 @@ return {
     end,
   },
 
+  -- LSP ui
+  {
+    "glepnir/lspsaga.nvim",
+    event = "BufRead",
+    keys = {
+      -- LSP finder - Find the symbol's definition
+      -- If there is no definition, it will instead be hidden
+      -- When you use an action in finder like "open vsplit",
+      -- you can use <C-t> to jump back
+      -- { "gh", "<cmd>Lspsaga lsp_finder<CR>", "LSP Finder" },
+    },
+  },
+
   -- fancy notify
   {
     "rcarriga/nvim-notify",
