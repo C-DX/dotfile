@@ -10,7 +10,7 @@ return {
     },
     opts = {
       -- A list of parser names
-      ensure_installed = "all",
+      ensure_installed = { "c", "cpp", "lua", "help", "rust", "go", "python" },
       -- Install parsers synchronously (only applied to `ensure_installed`)
       sync_install = false,
 
