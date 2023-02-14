@@ -1,4 +1,4 @@
-local servers = { "sumneko_lua", "clangd" }
+local servers = { "lua_ls", "clangd" }
 
 return {
   -- lsp manager
