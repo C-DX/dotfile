@@ -40,8 +40,8 @@ return {
           mappings = {
             i = {
               ["<C-t>"] = require("trouble.providers.telescope").open_with_trouble,
-              ["<C-Down"] = require("telescope.actions").cycle_history_next,
-              ["<C-Up"] = require("telescope.actions").cycle_history_prev,
+              ["<C-Down>"] = require("telescope.actions").cycle_history_next,
+              ["<C-Up>"] = require("telescope.actions").cycle_history_prev,
             },
           },
         },
