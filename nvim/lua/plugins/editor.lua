@@ -102,6 +102,24 @@ return {
         }),
         desc = "Goto Symbol",
       },
+      {
+        "<leader>sS",
+        Util.telescope("lsp_workspace_symbols", {
+          symbols = {
+            "Class",
+            "Function",
+            "Method",
+            "Constructor",
+            "Interface",
+            "Module",
+            "Struct",
+            "Trait",
+            "Field",
+            "Property",
+          },
+        }),
+        desc = "Goto Symbol (Workspace)",
+      },
       { "<leader>uc", Util.telescope("colorscheme", { enable_preview = true }), desc = "Colorscheme with preview" },
     },
   },
@@ -113,7 +131,7 @@ return {
     config = function()
       local wk = require("which-key")
       wk.setup()
-      wk.register({
+      local keymaps = {
         mode = { "n", "v" },
         ["g"] = { name = "+goto" },
         ["]"] = { name = "+next" },
@@ -125,11 +143,14 @@ return {
         ["<leader>g"] = { name = "+git" },
         ["<leader>q"] = { name = "+quit/session" },
         ["<leader>s"] = { name = "+search" },
-        ["<leader>sn"] = { name = "+noice" },
         ["<leader>u"] = { name = "+ui" },
         ["<leader>w"] = { name = "+windows" },
         ["<leader>x"] = { name = "+diagnostics/quickfix" },
-      })
+      }
+      if Util.has("noice.nvim") then
+        keymaps["<leader>sn"] = { name = "+noice" }
+      end
+      wk.register(keymaps)
     end,
   },
 

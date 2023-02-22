@@ -1,4 +1,4 @@
-local servers = { "lua_ls", "clangd" }
+local servers = { "lua_ls", "clangd", "rust_analyzer" }
 
 return {
   -- lsp manager
