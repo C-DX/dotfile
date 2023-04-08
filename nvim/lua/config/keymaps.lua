@@ -6,7 +6,7 @@ local function map(mode, lhs, rhs, opts)
   -- do not create the keymap if a lazy keys handler exists
   if not keys.active[keys.parse({ lhs, mode = mode }).id] then
     opts = opts or {}
-        opts.silent = opts.silent ~= false
+    opts.silent = opts.silent ~= false
     vim.keymap.set(mode, lhs, rhs, opts)
   end
 end

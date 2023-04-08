@@ -27,7 +27,7 @@ opt.wildmode = "longest:full,full" -- Command-line completion mode
 
 -- Autocomplete
 opt.completeopt = { "menu", "menuone", "noselect" }
-opt.shortmess:append { c = true } -- Avoid showing extra messages when using completion
+opt.shortmess:append({ c = true }) -- Avoid showing extra messages when using completion
 
 -- Indentation
 opt.expandtab = true -- Use spaces instead of tabs
