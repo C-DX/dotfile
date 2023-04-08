@@ -10,7 +10,23 @@ return {
     },
     opts = {
       -- A list of parser names
-      ensure_installed = { "c", "cpp", "lua", "help", "rust", "go", "python" },
+      ensure_installed = {
+        "bash",
+        "c",
+        "cpp",
+        "json",
+        "lua",
+        "luadoc",
+        "luap",
+        "markdown",
+        "markdown_inline",
+        "go",
+        "python",
+        "regex",
+        "rust",
+        "vim",
+        "yaml",
+      },
       -- Install parsers synchronously (only applied to `ensure_installed`)
       sync_install = false,
 
@@ -28,8 +44,8 @@ return {
         },
       },
     },
-    config = function (_, opts)
+    config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
     end,
-  }
+  },
 }

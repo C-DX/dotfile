@@ -18,7 +18,7 @@ return {
   -- lspconfig
   {
     "neovim/nvim-lspconfig",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
       {
@@ -37,49 +37,40 @@ return {
     config = function()
       local keymaps = require("plugins.lsp.keymaps")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      -- Add lsp hover document border
-      local handlers = {
-        ['textDocument/hover'] = vim.lsp.with(
-          vim.lsp.handlers.hover,
-          {border = 'rounded'}
-        ),
-        ['textDocument/signatureHelp'] = vim.lsp.with(
-          vim.lsp.handlers.signature_help,
-          {border = 'rounded'}
-        ),
-      }
 
-      require("mason-lspconfig").setup_handlers {
+      require("mason-lspconfig").setup_handlers({
         -- The first entry (without a key) will be the default handler
         -- and will be called for each installed server that doesn't have
         -- a dedicated handler.
         function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup {
-            handlers = handlers,
+          require("lspconfig")[server_name].setup({
             on_attach = keymaps.on_attach,
             capabilities = capabilities,
-          }
+          })
         end,
         -- Next, you can provide a dedicated handler for specific servers.
         -- For example, a handler override for the `rust_analyzer`:
         -- ["rust_analyzer"] = function()
         --   require("rust-tools").setup {}
         -- end
-      }
+      })
     end,
   },
 
   --formatter
   {
     "jose-elias-alvarez/null-ls.nvim",
-    event = "BufReadPre",
-    config = function()
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "mason.nvim" },
+    opts = function()
       local null_ls = require("null-ls")
       local formatting = null_ls.builtins.formatting
-
-      null_ls.setup {
+      return {
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", "Makefile", ".git"),
         sources = {
           formatting.stylua,
+          formatting.shfmt,
+          formatting.fish_indent,
         },
       }
     end,

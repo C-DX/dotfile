@@ -15,7 +15,9 @@ return {
             cond = require("lazy.status").has_updates,
             color = { fg = "#ff9e64" },
           },
-          "encoding", "fileformat", "filetype",
+          "encoding",
+          "fileformat",
+          "filetype",
         },
       },
     },
@@ -26,7 +28,7 @@ return {
     "akinsho/bufferline.nvim",
     event = "VeryLazy",
     dependencies = {
-      "famiu/bufdelete.nvim"
+      "famiu/bufdelete.nvim",
     },
     opts = {
       options = {
@@ -39,24 +41,38 @@ return {
           },
         },
         indicator = {
-          icon = '▎', -- this should be omitted if indicator style is not 'icon'
-          style = 'underline', -- 'icon' | 'underline' | 'none'
+          icon = "▎", -- this should be omitted if indicator style is not 'icon'
+          style = "underline", -- 'icon' | 'underline' | 'none'
         },
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(_, _, diag)
           local ret = (diag.error and " " .. diag.error .. " " or "")
-              .. (diag.warning and " " .. diag.warning or "")
+            .. (diag.warning and " " .. diag.warning or "")
           return vim.trim(ret)
         end,
       },
     },
   },
 
+  -- winbar
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    event = "BufRead",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    config = true,
+  },
+
   -- indent guides for Neovim
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     opts = {
+      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
       show_current_context = false,
       show_current_context_start = false,
     },
@@ -66,36 +82,41 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
-    event = "BufReadPre",
-    config = function()
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      symbol = "│",
+      options = {
+        -- Whether to use cursor column when computing reference indent.
+        indent_at_cursor = false,
+        -- place cursor on function header to get scope of its body.
+        try_as_border = true,
+      },
+    },
+    init = function()
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "noice", "mason" },
+        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
         callback = function()
           vim.b.miniindentscope_disable = true
         end,
       })
-      require("mini.indentscope").setup({
-        options = {
-          -- Whether to use cursor column when computing reference indent.
-          indent_at_cursor = false,
-          -- place cursor on function header to get scope of its body.
-          try_as_border = true,
-        },
-        symbol = "│",
-      })
+    end,
+    config = function(_, opts)
+      require("mini.indentscope").setup(opts)
     end,
   },
 
   -- LSP ui
   {
     "glepnir/lspsaga.nvim",
-    event = "BufRead",
-    keys = {
-      -- LSP finder - Find the symbol's definition
-      -- If there is no definition, it will instead be hidden
-      -- When you use an action in finder like "open vsplit",
-      -- you can use <C-t> to jump back
-      -- { "gh", "<cmd>Lspsaga lsp_finder<CR>", "LSP Finder" },
+    event = "LspAttach",
+    opts = {
+      ui = {
+        title = true, -- only works in Neovim 0.9+
+        border = "rounded",
+      },
+      symbol_in_winbar = {
+        enable = false,
+      },
     },
   },
 
@@ -113,7 +134,7 @@ return {
     },
     opts = {
       timeout = 3000,
-      background_colour = "#000000"
+      background_colour = "#000000",
     },
   },
 
@@ -122,15 +143,59 @@ return {
     "folke/noice.nvim",
     event = "VeryLazy",
     keys = {
-      { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c",
-        desc = "Redirect Cmdline" },
-      { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
-      { "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
-      { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
-      { "<C-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true,
-        expr = true, desc = "Scroll forward", mode = { "i", "n", "s" } },
-      { "<C-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true,
-        expr = true, desc = "Scroll backward", mode = { "i", "n", "s" } },
+      {
+        "<S-Enter>",
+        function()
+          require("noice").redirect(vim.fn.getcmdline())
+        end,
+        mode = "c",
+        desc = "Redirect Cmdline",
+      },
+      {
+        "<leader>snl",
+        function()
+          require("noice").cmd("last")
+        end,
+        desc = "Noice Last Message",
+      },
+      {
+        "<leader>snh",
+        function()
+          require("noice").cmd("history")
+        end,
+        desc = "Noice History",
+      },
+      {
+        "<leader>sna",
+        function()
+          require("noice").cmd("all")
+        end,
+        desc = "Noice All",
+      },
+      {
+        "<C-f>",
+        function()
+          if not require("noice.lsp").scroll(4) then
+            return "<c-f>"
+          end
+        end,
+        silent = true,
+        expr = true,
+        desc = "Scroll forward",
+        mode = { "i", "n", "s" },
+      },
+      {
+        "<C-b>",
+        function()
+          if not require("noice.lsp").scroll(-4) then
+            return "<c-b>"
+          end
+        end,
+        silent = true,
+        expr = true,
+        desc = "Scroll backward",
+        mode = { "i", "n", "s" },
+      },
     },
     opts = {
       lsp = {
@@ -159,26 +224,29 @@ return {
   {
     "goolord/alpha-nvim",
     event = "VimEnter",
-    config = function()
+    opts = function()
       local dashboard = require("alpha.themes.dashboard")
       dashboard.section.buttons.val = {
-        dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+        dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
         dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
-        dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+        dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
         dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("s", "勒" .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
-        dashboard.button("l", "鈴" .. " Lazy", ":Lazy<CR>"),
+        dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+        dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+        dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),
         dashboard.button("q", " " .. " Quit", ":qa<CR>"),
       }
       for _, button in ipairs(dashboard.section.buttons.val) do
         button.opts.hl = "AlphaButtons"
         button.opts.hl_shortcut = "AlphaShortcut"
       end
-      dashboard.section.footer.opts.hl = "Type"
       dashboard.section.header.opts.hl = "AlphaHeader"
       dashboard.section.buttons.opts.hl = "AlphaButtons"
+      dashboard.section.footer.opts.hl = "AlphaFooter"
       dashboard.opts.layout[1].val = 8
-
+      return dashboard
+    end,
+    config = function(_, dashboard)
       -- close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then
         vim.cmd.close()

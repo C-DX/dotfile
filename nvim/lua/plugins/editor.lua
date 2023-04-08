@@ -17,7 +17,7 @@ return {
         mappings = {
           ["<space>"] = "none",
           ["o"] = "toggle_node",
-        }
+        },
       },
       filesystem = {
         follow_current_file = true, -- find and focus the file in the active buffer
@@ -51,7 +51,7 @@ return {
             override_generic_sorter = true, -- override the generic sorter
             override_file_sorter = true, -- override the file sorter
             case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-          }
+          },
         },
       })
       require("telescope").load_extension("fzf")
@@ -139,6 +139,7 @@ return {
         ["<leader><tab>"] = { name = "+tabs" },
         ["<leader>b"] = { name = "+buffer" },
         ["<leader>c"] = { name = "+code" },
+        ["<leader>d"] = { name = "+diagnostics" },
         ["<leader>f"] = { name = "+file/find" },
         ["<leader>g"] = { name = "+git" },
         ["<leader>q"] = { name = "+quit/session" },
@@ -176,10 +177,14 @@ return {
         map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
         map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
         map("n", "<leader>ghp", gs.preview_hunk, "Preview Hunk")
-        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
+        map("n", "<leader>ghb", function()
+          gs.blame_line({ full = true })
+        end, "Blame Line")
         map("n", "<leader>gtb", gs.toggle_current_line_blame, "Toggle Current Line Blame")
         map("n", "<leader>ghd", gs.diffthis, "Diff This")
-        map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+        map("n", "<leader>ghD", function()
+          gs.diffthis("~")
+        end, "Diff This ~")
         map("n", "<leader>gtd", gs.toggle_deleted, "Toggle Delete")
         -- Text object
         map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
@@ -192,8 +197,20 @@ return {
     "RRethy/vim-illuminate",
     event = "BufReadPost",
     keys = {
-      { "]]", function() require("illuminate").goto_next_reference(false) end, desc = "Next Reference", },
-      { "[[", function() require("illuminate").goto_prev_reference(false) end, desc = "Prev Reference" },
+      {
+        "]]",
+        function()
+          require("illuminate").goto_next_reference(false)
+        end,
+        desc = "Next Reference",
+      },
+      {
+        "[[",
+        function()
+          require("illuminate").goto_prev_reference(false)
+        end,
+        desc = "Prev Reference",
+      },
     },
     config = function()
       require("illuminate").configure()
@@ -212,7 +229,7 @@ return {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     opts = {
-      use_diagnostic_signs = true -- enabling this will use the signs defined in your lsp client
+      use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
     },
     keys = {
       { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
@@ -227,8 +244,20 @@ return {
     event = "BufReadPost",
     config = true, -- use default config
     keys = {
-      { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
-      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+      {
+        "]t",
+        function()
+          require("todo-comments").jump_next()
+        end,
+        desc = "Next todo comment",
+      },
+      {
+        "[t",
+        function()
+          require("todo-comments").jump_prev()
+        end,
+        desc = "Previous todo comment",
+      },
       { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Todo (Trouble)" },
       { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
       { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },

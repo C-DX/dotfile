@@ -5,26 +5,39 @@ function M.on_attach(client, bufnr)
     vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
   end
 
-  map("n", "<leader>cd", vim.diagnostic.open_float, "Line Diagnostics")
   map("n", "<leader>cl", "<cmd>LspInfo<cr>", "Lsp Info")
-  map("n", "gd", "<cmd>Telescope lsp_definitions<cr>", "Goto Definition")
-  map("n", "gr", "<cmd>Telescope lsp_references<cr>", "References")
-  map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-  map("n", "gI", "<cmd>Telescope lsp_implementations<cr>", "Goto Implementation")
-  map("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", "Goto Type Definition")
-  map("n", "K", vim.lsp.buf.hover, "Hover")
-  map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
-  map("i", "<c-k>", vim.lsp.buf.signature_help, "Signature Help")
-  map("n", "]d", M.diagnostic_goto(true), "Next Diagnostic")
-  map("n", "[d", M.diagnostic_goto(false), "Prev Diagnostic")
-  map("n", "]e", M.diagnostic_goto(true, "ERROR"), "Next Error")
-  map("n", "[e", M.diagnostic_goto(false, "ERROR"), "Prev Error")
-  map("n", "]w", M.diagnostic_goto(true, "WARN"), "Next Warning")
-  map("n", "[w", M.diagnostic_goto(false, "WARN"), "Prev Warning")
-  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
   map("n", "<leader>cf", M.format, "Format Document")
   map("v", "<leader>cf", M.format, "Format Range")
-  map("n", "<leader>cr", M.rename, "Rename")
+
+  -- Telescope
+  map("n", "gr", "<cmd>Telescope lsp_references<cr>", "References")
+
+  -- Lspsaga
+  map("n", "gh", "<cmd>Lspsaga lsp_finder<cr>", "Find the symbol's definition")
+  map("n", "K", "<cmd>Lspsaga hover_doc<cr>", "Hover")
+  map({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<cr>", "Code action")
+  map("n", "<leader>cr", "<cmd>Lspsaga rename<cr>", "Rename for entire file")
+  map("n", "<leader>cR", "<cmd>Lspsaga rename ++project<cr>", "Rename for selected files")
+  map("n", "gp", "<cmd>Lspsaga peek_definition<cr>", "Peek definition")
+  map("n", "gd", "<cmd>Lspsaga goto_definition<cr>", "Goto definition")
+  map("n", "gt", "<cmd>Lspsaga peek_type_definition<cr>", "Peek type definition")
+  map("n", "gT", "<cmd>Lspsaga goto_type_definition<cr>", "Goto type definition")
+  map("n", "<leader>co", "<cmd>Lspsaga outline<cr>", "Code Outline")
+  -- diagnostics
+  map("n", "<leader>dl", "<cmd>Lspsaga show_line_diagnostics<cr>", "Line Diagnostics")
+  map("n", "<leader>db", "<cmd>Lspsaga show_buf_diagnostics<cr>", "Buffer Diagnostics")
+  map("n", "<leader>dw", "<cmd>Lspsaga show_workspace_diagnostics<cr>", "Workspace Diagnostics")
+  map("n", "<leader>dc", "<cmd>Lspsaga show_cursor_diagnostics<cr>", "Cursor Diagnostics")
+  -- diagnostic jump
+  map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<cr>", "Prev Diagnostic")
+  map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<cr>", "Next Diagnostic")
+  -- diagnostic jump with filters such as only jumping to an error
+  map("n", "[E", function()
+    require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+  end, "Prev Error")
+  map("n", "]E", function()
+    require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+  end, "Next Error")
 end
 
 function M.format()
