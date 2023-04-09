@@ -34,8 +34,12 @@ return {
         end,
       },
     },
-    config = function()
+    opts = {
+      autoformat = true, -- automatically format on save
+    },
+    config = function(_, opts)
       local keymaps = require("plugins.lsp.keymaps")
+      keymaps.autoformat = opts.autoformat -- setup autoformat
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       require("mason-lspconfig").setup_handlers({

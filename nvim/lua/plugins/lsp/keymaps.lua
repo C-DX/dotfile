@@ -1,6 +1,29 @@
 local M = {}
 
+M.autoformat = true
+
 function M.on_attach(client, bufnr)
+  -- don't format if client disabled it
+  if
+    client.config
+    and client.config.capabilities
+    and client.config.capabilities.documentFormattingProvider == false
+  then
+    return
+  end
+
+  if client.supports_method("textDocument/formatting") then
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("LspFormatting" .. bufnr, {}),
+      buffer = bufnr,
+      callback = function()
+        if M.autoformat then
+          M.format()
+        end
+      end,
+    })
+  end
+
   local function map(mode, l, r, desc)
     vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
   end
@@ -40,8 +63,27 @@ function M.on_attach(client, bufnr)
   end, "Next Error")
 end
 
+function M.toggle()
+  local Util = require("lazy.core.util")
+
+  if vim.b.autoformat == false then
+    vim.b.autoformat = nil
+    M.autoformat = true
+  else
+    M.autoformat = not M.autoformat
+  end
+  if M.autoformat then
+    Util.info("Enabled format on save", { title = "Format" })
+  else
+    Util.warn("Disabled format on save", { title = "Format" })
+  end
+end
+
 function M.format()
   local buf = vim.api.nvim_get_current_buf()
+  if vim.b.autoformat == false then
+    return
+  end
   local ft = vim.bo[buf].filetype
   local have_nls = #require("null-ls.sources").get_available(ft, "NULL_LS_FORMATTING") > 0
 
@@ -54,22 +96,6 @@ function M.format()
       return client.name ~= "null-ls"
     end,
   }, require("util").opts("nvim-lspconfig").format or {}))
-end
-
-function M.rename()
-  if pcall(require, "inc_rename") then
-    return ":IncRename " .. vim.fn.expand("<cword>")
-  else
-    vim.lsp.buf.rename()
-  end
-end
-
-function M.diagnostic_goto(next, severity)
-  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    go({ severity = severity })
-  end
 end
 
 return M
