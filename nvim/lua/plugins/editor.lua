@@ -158,7 +158,7 @@ return {
   -- git signs
   {
     "lewis6991/gitsigns.nvim",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
       on_attach = function(buffer)
         local gs = package.loaded.gitsigns
@@ -195,7 +195,7 @@ return {
   -- references
   {
     "RRethy/vim-illuminate",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     keys = {
       {
         "]]",
@@ -241,7 +241,7 @@ return {
   {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble", "TodoTelescope" },
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     config = true, -- use default config
     keys = {
       {

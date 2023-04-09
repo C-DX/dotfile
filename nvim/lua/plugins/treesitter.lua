@@ -3,7 +3,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     keys = {
       { "<C-space>", desc = "Incremental selection" },
       { "<bs>", desc = "Shrink selection", mode = "x" },
