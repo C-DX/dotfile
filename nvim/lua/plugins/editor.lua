@@ -199,26 +199,31 @@ return {
     keys = {
       {
         "]]",
-        function()
-          require("illuminate").goto_next_reference(false)
-        end,
         desc = "Next Reference",
       },
       {
         "[[",
-        function()
-          require("illuminate").goto_prev_reference(false)
-        end,
         desc = "Prev Reference",
       },
     },
     config = function()
       require("illuminate").configure()
+
+      local function map(key, dir, buffer)
+        vim.keymap.set("n", key, function()
+          require("illuminate")["goto_" .. dir .. "_reference"](false)
+        end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
+      end
+
+      map("]]", "next")
+      map("[[", "prev")
+
+      -- set it after loading ftplugins, since a lot overwrite [[ and ]]
       vim.api.nvim_create_autocmd("FileType", {
         callback = function()
           local buffer = vim.api.nvim_get_current_buf()
-          pcall(vim.keymap.del, "n", "]]", { buffer = buffer })
-          pcall(vim.keymap.del, "n", "[[", { buffer = buffer })
+          map("]]", "next", buffer)
+          map("[[", "prev", buffer)
         end,
       })
     end,
@@ -234,6 +239,8 @@ return {
     keys = {
       { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
       { "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
+      { "<leader>xl", "<cmd>TroubleToggle loclist<cr>", desc = "Location List (Trouble)" },
+      { "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
     },
   },
 
@@ -263,4 +270,28 @@ return {
       { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
     },
   },
+
+  -- status column and code folding
+  -- {
+  --   "luukvbaal/statuscol.nvim",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     local builtin = require("statuscol.builtin")
+  --     require("statuscol").setup({
+  --       relculright = true,
+  --       segments = {
+  --         { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
+  --         {
+  --           sign = { name = { "Diagnostic" }, maxwidth = 1, auto = true },
+  --           click = "v:lua.ScSa",
+  --         },
+  --         { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+  --         {
+  --           sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = false },
+  --           click = "v:lua.ScSa",
+  --         },
+  --       },
+  --     })
+  --   end,
+  -- },
 }
