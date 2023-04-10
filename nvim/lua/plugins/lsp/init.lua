@@ -33,6 +33,7 @@ return {
           return require("util").has("nvim-cmp")
         end,
       },
+      "simrat39/rust-tools.nvim",
     },
     opts = {
       autoformat = true, -- automatically format on save
@@ -54,9 +55,14 @@ return {
         end,
         -- Next, you can provide a dedicated handler for specific servers.
         -- For example, a handler override for the `rust_analyzer`:
-        -- ["rust_analyzer"] = function()
-        --   require("rust-tools").setup {}
-        -- end
+        ["rust_analyzer"] = function()
+          require("rust-tools").setup({
+            server = {
+              on_attach = keymaps.on_attach,
+              capabilities = capabilities,
+            },
+          })
+        end,
       })
     end,
   },
