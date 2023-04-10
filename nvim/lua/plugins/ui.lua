@@ -111,13 +111,24 @@ return {
     event = "LspAttach",
     opts = {
       ui = {
-        title = true, -- only works in Neovim 0.9+
         border = "rounded",
+      },
+      lightbulb = {
+        virtual_text = false,
       },
       symbol_in_winbar = {
         enable = false,
       },
     },
+  },
+
+  -- color highlighter
+  {
+    "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("colorizer").setup()
+    end,
   },
 
   -- fancy notify
@@ -243,7 +254,7 @@ return {
       dashboard.section.header.opts.hl = "AlphaHeader"
       dashboard.section.buttons.opts.hl = "AlphaButtons"
       dashboard.section.footer.opts.hl = "AlphaFooter"
-      dashboard.opts.layout[1].val = 8
+      dashboard.opts.layout[1].val = 4
       return dashboard
     end,
     config = function(_, dashboard)
