@@ -271,6 +271,17 @@ return {
     },
   },
 
+  -- autosave
+  {
+    "Pocco81/auto-save.nvim",
+    keys = {
+      { "<leader>cs", ":ASToggle<cr>", desc = "Toggle Auto Save" },
+    },
+    opts = {
+      enabled = false,
+    },
+  },
+
   -- status column and code folding
   -- {
   --   "luukvbaal/statuscol.nvim",
