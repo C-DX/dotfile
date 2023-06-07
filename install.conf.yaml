@@ -10,4 +10,9 @@
     ~/.tmux.conf:
     ~/.zshrc:
     ~/.config/nvim:
+    ~/.config/:
+      glob: true
+      path: hyprland/*
 
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
