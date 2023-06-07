@@ -109,6 +109,41 @@ return {
   {
     "glepnir/lspsaga.nvim",
     event = "LspAttach",
+    keys = {
+      { "gh", "<cmd>Lspsaga lsp_finder<cr>", desc = "Find the symbol's definition" },
+      { "K", "<cmd>Lspsaga hover_doc<cr>", desc = "Hover" },
+      { "<leader>ca", "<cmd>Lspsaga code_action<cr>", desc = "Code action", mode = { "n", "v" } },
+      { "<leader>cr", "<cmd>Lspsaga rename<cr>", desc = "Rename for entire file" },
+      { "<leader>cR", "<cmd>Lspsaga rename ++project<cr>", desc = "Rename for selected files" },
+      { "gp", "<cmd>Lspsaga peek_definition<cr>", desc = "Peek definition" },
+      { "gd", "<cmd>Lspsaga goto_definition<cr>", desc = "Goto definition" },
+      { "gt", "<cmd>Lspsaga peek_type_definition<cr>", desc = "Peek type definition" },
+      { "gT", "<cmd>Lspsaga goto_type_definition<cr>", desc = "Goto type definition" },
+      { "<leader>co", "<cmd>Lspsaga outline<cr>", desc = "Code Outline" },
+      -- diagnostics
+      { "<leader>dl", "<cmd>Lspsaga show_line_diagnostics<cr>", desc = "Line Diagnostics" },
+      { "<leader>db", "<cmd>Lspsaga show_buf_diagnostics<cr>", desc = "Buffer Diagnostics" },
+      { "<leader>dw", "<cmd>Lspsaga show_workspace_diagnostics<cr>", desc = "Workspace Diagnostics" },
+      { "<leader>dc", "<cmd>Lspsaga show_cursor_diagnostics<cr>", desc = "Cursor Diagnostics" },
+      -- diagnostic jump
+      { "[e", "<cmd>Lspsaga diagnostic_jump_prev<cr>", desc = "Prev Diagnostic" },
+      { "]e", "<cmd>Lspsaga diagnostic_jump_next<cr>", desc = "Next Diagnostic" },
+      -- diagnostic jump with filters such as only jumping to an error
+      {
+        "[E",
+        function()
+          require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+        end,
+        desc = "Prev Error",
+      },
+      {
+        "]E",
+        function()
+          require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+        end,
+        desc = "Next Error",
+      },
+    },
     opts = {
       ui = {
         border = "rounded",

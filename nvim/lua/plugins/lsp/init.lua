@@ -35,6 +35,9 @@ return {
       },
       "simrat39/rust-tools.nvim",
     },
+    keys = {
+      { "<leader>cF", require("plugins.lsp.keymaps").toggle, desc = "Toggle format on Save" },
+    },
     opts = {
       autoformat = true, -- automatically format on save
     },
@@ -60,6 +63,13 @@ return {
             server = {
               on_attach = keymaps.on_attach,
               capabilities = capabilities,
+              settings = {
+                ["rust-analyzer"] = {
+                  checkOnSave = {
+                    command = "clippy",
+                  },
+                },
+              },
             },
           })
         end,

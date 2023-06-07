@@ -1,4 +1,30 @@
 return {
+  -- snippets
+  {
+    "L3MON4D3/LuaSnip",
+    lazy = true,
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
+    config = function()
+      -- pass { paths = "./my-snippets/"} to load snippets from my-snippets folder
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = "./my-snippets" })
+      -- LuaSnip snippet history fix
+      vim.api.nvim_create_autocmd("ModeChanged", {
+        pattern = "*",
+        callback = function()
+          if
+            ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
+            and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+            and not require("luasnip").session.jump_active
+          then
+            require("luasnip").unlink_current()
+          end
+        end,
+      })
+    end,
+  },
+
   -- auto completion
   {
     "hrsh7th/nvim-cmp",
@@ -9,39 +35,16 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
-      {
-        "L3MON4D3/LuaSnip",
-        dependencies = {
-          "rafamadriz/friendly-snippets",
-        },
-        config = function()
-          -- pass { paths = "./my-snippets/"} to load snippets from my-snippets folder
-          require("luasnip.loaders.from_vscode").lazy_load({ paths = "./my-snippets" })
-
-          vim.api.nvim_create_autocmd("ModeChanged", {
-            pattern = "*",
-            callback = function()
-              if
-                ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
-                and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-                and not require("luasnip").session.jump_active
-              then
-                require("luasnip").unlink_current()
-              end
-            end,
-          })
-        end,
-      },
       "saadparwaiz1/cmp_luasnip",
       -- pictograms
       "onsails/lspkind-nvim",
     },
-    config = function()
+    opts = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
 
-      cmp.setup({
+      return {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -87,8 +90,11 @@ return {
             end
           end, { "i", "s" }),
         }),
-      })
-
+      }
+    end,
+    config = function(_, opts)
+      local cmp = require("cmp")
+      cmp.setup(opts)
       -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
