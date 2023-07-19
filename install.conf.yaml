@@ -10,6 +10,7 @@
     ~/.tmux.conf:
     ~/.zshrc:
     ~/.config/nvim:
+    ~/.config/kitty:
     ~/.config/:
       glob: true
       path: hyprland/*
