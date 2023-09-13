@@ -13,6 +13,7 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
     opts = {
+      close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
       window = {
         mappings = {
           ["<space>"] = "none",
@@ -20,8 +21,8 @@ return {
         },
       },
       filesystem = {
-        follow_current_file = true, -- find and focus the file in the active buffer
-        use_libuv_file_watcher = false, -- set `true` to auto refresh
+        follow_current_file = { enabled = true }, -- find and focus the file in the active buffer
+        use_libuv_file_watcher = true, -- set `true` to auto refresh
       },
     },
   },
