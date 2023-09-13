@@ -29,9 +29,6 @@ return {
       },
       {
         "hrsh7th/cmp-nvim-lsp",
-        cond = function()
-          return require("util").has("nvim-cmp")
-        end,
       },
       "simrat39/rust-tools.nvim",
     },
