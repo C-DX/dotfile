@@ -3,7 +3,7 @@
     "layer": "top", // Waybar at top layer
     // "spacing": 5, // Gaps between modules (4px)
     "modules-left": ["custom/launcher", "cpu", "memory", "disk", "hyprland/window"],
-    "modules-center": ["wlr/workspaces"],
+    "modules-center": ["wlr/workspaces", "custom/spotify"],
     "modules-right": ["tray", "custom/wallpaper", "backlight", "pulseaudio", "network", "battery", "clock", "custom/power-menu"],
     "wlr/workspaces": {
         "format": "{icon} {name}",
