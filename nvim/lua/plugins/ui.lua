@@ -70,11 +70,12 @@ return {
   -- indent guides for Neovim
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPost", "BufNewFile" },
+    main = "ibl",
+    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     opts = {
-      filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
-      show_current_context = false,
-      show_current_context_start = false,
+      exclude = {
+        filetypes = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
+      },
     },
   },
 
