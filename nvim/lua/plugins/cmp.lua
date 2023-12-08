@@ -3,9 +3,11 @@ return {
   {
     "L3MON4D3/LuaSnip",
     lazy = true,
+    version = "v2.*",
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
+    build = "make install_jsregexp",
     config = function()
       -- pass { paths = "./my-snippets/"} to load snippets from my-snippets folder
       require("luasnip.loaders.from_vscode").lazy_load({ paths = "./my-snippets" })
