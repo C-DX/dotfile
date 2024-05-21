@@ -110,8 +110,17 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+if ! type "eza" > /dev/null; then
+    alias ls="eza"
+fi
+
+if [ -f ~/.zsh/localconfig ]; then
+    source ~/.zsh/localconfig
+fi
+
 eval "$(zoxide init zsh)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 export PATH="$PATH:~/.local/bin/"
+
