@@ -1,0 +1,9 @@
+{
+  "extras": [
+    "lazyvim.plugins.extras.lang.toml"
+  ],
+  "news": {
+    "NEWS.md": "4964"
+  },
+  "version": 5
+}
