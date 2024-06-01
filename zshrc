@@ -110,6 +110,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+export VISUAL="nvim"
+export SUDO_EDITOR="nvim"
+
 if ! type "eza" > /dev/null; then
     alias ls="eza"
 fi
@@ -123,4 +126,8 @@ eval "$(zoxide init zsh)"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 export PATH="$PATH:~/.local/bin/"
+
+if ! type "broot" > /dev/null; then
+  source /home/cdx/.config/broot/launcher/bash/br
+fi
 
