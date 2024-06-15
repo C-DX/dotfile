@@ -10,6 +10,12 @@ return {
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
       end
 
+      require("luasnip").setup({
+        region_check_events = "CursorHold,InsertLeave",
+        -- those are for removing deleted snippets, also a common problem
+        delete_check_events = "TextChanged,InsertEnter",
+      })
+
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
