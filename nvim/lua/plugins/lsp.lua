@@ -25,6 +25,11 @@ return {
   -- replace LSP keymaps
   {
     "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        clangd = { mason = false },
+      },
+    },
     init = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
 
